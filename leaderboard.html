@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Arcadia — Leaderboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&display=sw
+ap" rel="stylesheet">
+<style>
+:root {
+--bg:#080a12;
+--panel:#0f1326cc;
+--text:#e7ecff;
+--muted:#b7c0ff;
+--accent:#7c5cff;
+--accent-2:#00ffd1;
+--radius:14px;
+--shadow:0 8px 20px rgba(0,0,0,.35);
+}
+body {
+margin:0;
+font-family:"Chakra Petch", sans-serif;
+background: var(--bg);
+color: var(--text);
+display:flex;
+flex-direction:column;
+min-height:100vh;
+}
+body::before {
+content:"";
+position:fixed;
+inset:0;
+background: radial-gradient(circle at 20% 20%, #7c5cff44, transparent 60%),
+radial-gradient(circle at 80% 80%, #00ffd144, transparent 60%),
+radial-gradient(circle at 50% 50%, #ff3d7544, transparent 70%);
+animation: moveBg 20s infinite alternate ease-in-out;
+z-index:-1;
+}
+@keyframes moveBg {
+0% { background-position: 20% 20%, 80% 80%, 50% 50%; }
+50% { background-position: 30% 10%, 70% 90%, 40% 60%; }
+100% { background-position: 20% 30%, 80% 70%, 60% 40%; }
+}
+header {
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:14px 22px;
+background: var(--panel);
+backdrop-filter: blur(10px);
+}
+.header-btn {
+background:none;
+border:none;
+color: var(--text);
+font-size:1.1rem;
+cursor:pointer;
+padding:8px 12px;
+border-radius:12px;
+transition: background .2s;
+}
+.header-btn:hover {
+background: var(--accent);
+color:#fff;
+}
+main {
+flex:1;
+display:flex;
+flex-direction:column;
+align-items:center;
+padding:30px 20px;
+}
+h1 {
+font-size:2rem;
+margin-bottom:20px;
+color: var(--accent-2);
+}
+table {
+width:95%;
+max-width:1200px;
+border-collapse: collapse;
+background: var(--panel);
+border-radius: var(--radius);
+overflow:hidden;
+box-shadow: var(--shadow);
+}
+th, td {
+padding:14px;
+text-align:center;
+border-bottom:1px solid rgba(255,255,255,0.1);
+}
+th {
+background: linear-gradient(135deg, var(--accent), var(--accent-2));
+color:#fff;
+font-weight:700;
+font-size:1rem;
+}
+tr:last-child td {
+border-bottom:none;
+}
+tr:hover {
+background: rgba(255,255,255,0.05);
+}
+footer {
+padding:14px;
+text-align:center;
+color:var(--muted);
+}
+</style>
+</head>
+<body>
+<header>
+<button class="header-btn" onclick="window.location.href='home.html'"> </button>
+<h2>Leaderboard</h2>
+<div style="width:40px;"></div>
+</header>
+<main>
+<h1>Top Players</h1>
+<table>
+<thead>
+<tr>
+<th>Rank</th>
+<th>Player</th>
+<th>Player ID</th>
+<th>Matches Played</th>
+<th>Current Session</th>
+<th>Season Start</th>
+<th>Season End</th>
+<th>Skill Rating</th>
+</tr>
+</thead>
+<tbody>
+<tr><td>1</td><td>Naruto 
+Uzumaki</td><td>#KNY777</td><td>150</td><td>Online</td><td>Jan 2025</td><td>Mar 
+2025</td><td>2600</td></tr>
+<tr><td>2</td><td>Sasuke 
+Uchiha</td><td>#UCH123</td><td>140</td><td>Online</td><td>Jan 2025</td><td>Mar 
+2025</td><td>2550</td></tr>
+<tr><td>3</td><td>Sakura 
+Haruno</td><td>#MDN555</td><td>115</td><td>Offline</td><td>Jan 2025</td><td>Mar 
+2025</td><td>2300</td></tr>
+<tr><td>4</td><td>Kakashi 
+Hatake</td><td>#KKS999</td><td>170</td><td>Online</td><td>Jan 2025</td><td>Mar 
+2025</td><td>2500</td></tr>
+<tr><td>5</td><td>Itachi 
+Uchiha</td><td>#AKT777</td><td>130</td><td>Offline</td><td>Jan 2025</td><td>Mar 
+2025</td><td>2450</td></tr>
+<tr><td>6</td><td>Gaara</td><td>#SND505</td><td>110</td><td>Online</td><td>Jan 
+2025</td><td>Mar 2025</td><td>2200</td></tr>
+<tr><td>7</td><td>Shikamaru 
+Nara</td><td>#IQ200</td><td>95</td><td>Online</td><td>Jan 2025</td><td>Mar 
+2025</td><td>2150</td></tr>
+<tr><td>8</td><td>Rock Lee</td><td>#TAI808</td><td>120</td><td>Offline</td><td>Jan 
+2025</td><td>Mar 2025</td><td>2100</td></tr>
+<tr><td>9</td><td>Neji 
+Hyuga</td><td>#BYK360</td><td>105</td><td>Offline</td><td>Jan 2025</td><td>Mar 
+2025</td><td>2120</td></tr>
+<tr><td>10</td><td>Hinata 
+Hyuga</td><td>#HTH112</td><td>88</td><td>Online</td><td>Jan 2025</td><td>Mar 
+2025</td><td>2050</td></tr>
+<tr><td>11</td><td>Killer 
+Bee</td><td>#JNC888</td><td>130</td><td>Online</td><td>Jan 2025</td><td>Mar 
+2025</td><td>2350</td></tr>
+<tr><td>12</td><td>Madara 
+Uchiha</td><td>#MDR666</td><td>160</td><td>Offline</td><td>Jan 2025</td><td>Mar 
+2025</td><td>2700</td></tr>
+<tr><td>13</td><td>Hashirama 
+Senju</td><td>#HSH111</td><td>155</td><td>Online</td><td>Jan 2025</td><td>Mar 
+2025</td><td>2680</td></tr>
+<tr><td>14</td><td>Tobirama 
+Senju</td><td>#TBR222</td><td>145</td><td>Offline</td><td>Jan 2025</td><td>Mar 
+2025</td><td>2400</td></tr>
+<tr><td>15</td><td>Minato 
+Namikaze</td><td>#YLW444</td><td>148</td><td>Online</td><td>Jan 2025</td><td>Mar 
+2025</td><td>2650</td></tr>
+<tr><td>16</td><td>Jiraiya</td><td>#SAN333</td><td>125</td><td>Offline</td><td>Jan 
+2025</td><td>Mar 2025</td><td>2350</td></tr>
+<tr><td>17</td><td>Orochimaru</td><td>#SNN999</td><td>118</td><td>Offline</td><t
+d>Jan 2025</td><td>Mar 2025</td><td>2290</td></tr>
+<tr><td>18</td><td>Tsunade</td><td>#SAN555</td><td>122</td><td>Online</td><td>Ja
+n 2025</td><td>Mar 2025</td><td>2330</td></tr>
+<tr><td>19</td><td>Pain 
+(Nagato)</td><td>#AKT001</td><td>142</td><td>Offline</td><td>Jan 2025</td><td>Mar 
+2025</td><td>2480</td></tr>
+<tr><td>20</td><td>Obito 
+Uchiha</td><td>#MSK404</td><td>135</td><td>Online</td><td>Jan 2025</td><td>Mar 
+2025</td><td>2430</td></tr>
+</tbody>
+</table>
+</main>
+<footer>© 2025 Arcadia Network</footer>
+</body>
+</html>

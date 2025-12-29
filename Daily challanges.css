@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Daily Challenge — Arcadia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Jet
+Brains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+--bg:#080a12;
+--panel:#0f1326cc;
+--panel-solid:#0f1326;
+--text:#e7ecff;
+--muted:#b7c0ff;
+--accent:#7c5cff;
+--accent-2:#00ffd1;
+--error:#ff6b6b;
+--ok:#31e981;
+--shadow:0 10px 30px rgba(0,0,0,.35), 0 0 0 1px rgba(124,92,255,.08) inset;
+--radius:22px;
+}
+*{box-sizing:border-box}
+html,body{height:100%; margin:0;}
+body{
+font-family:"Chakra Petch", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 
+Noto Sans, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji";
+color:var(--text);
+background: radial-gradient(1200px 600px at 10% -10%, #1b1f3bcc 0%, transparent 60%),
+radial-gradient(1000px 500px at 90% 110%, #0b122ecc 0%, transparent 60%),
+radial-gradient(800px 800px at 50% 50%, #0a0e21 0%, #080a12 60%);
+display: flex;
+flex-direction: column;
+overflow: auto;
+}
+/* Retro grid */
+.grid{
+position:fixed; inset:0; pointer-events:none; opacity:.35; filter:drop-shadow(0 0 6px
+rgba(124,92,255,.25));
+background:
+repeating-linear-gradient(0deg, transparent 0 58px, rgba(124,92,255,.06) 58px 59px),
+repeating-linear-gradient(90deg, transparent 0 58px, rgba(124,92,255,.06) 58px 59px);
+mask: radial-gradient(ellipse at center, black 0%, transparent 70%);
+z-index: -1;
+}
+/* Floating stars */
+.stars{
+position:fixed; inset:0; pointer-events:none; opacity:.5;
+background: radial-gradient(2px 2px at 20% 30%, #fff 50%, transparent 51%),
+radial-gradient(2px 2px at 80% 70%, #fff 50%, transparent 51%),
+radial-gradient(1.5px 1.5px at 65% 20%, #fff 50%, transparent 51%),
+radial-gradient(1.5px 1.5px at 35% 80%, #fff 50%, transparent 51%);
+animation: drift 22s linear infinite;
+z-index: -1;
+}
+@keyframes drift{
+from{transform: translateY(0)}
+to{transform: translateY(-40px)}
+}
+header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 14px 22px;
+background: var(--panel);
+backdrop-filter: blur(10px);
+}
+.header-title {
+display: flex;
+align-items: center;
+gap: 12px;
+}
+.logo{
+width:36px; height:36px; border-radius:10px; display:grid; place-items:center;
+background: radial-gradient(circle at 30% 30%, var(--accent-2), var(--accent) 60%);
+color:#02040f; font-weight:900; box-shadow:inset 0 0 16px rgba(0,0,0,.25), 0 6px 30px
+rgba(124,92,255,.35);
+}
+.header-btn {
+background: none;
+border: none;
+color: var(--text);
+font-size: 1.2rem;
+cursor: pointer;
+padding: 8px 12px;
+border-radius: 12px;
+transition: background .2s;
+}
+.header-btn:hover {
+background: var(--accent);
+}
+.main-content {
+flex: 1;
+padding: 20px;
+display: flex;
+flex-direction: column;
+align-items: center;
+gap: 25px;
+}
+.challenge-card {
+width: min(800px, 92vw);
+background: var(--panel);
+border-radius: var(--radius);
+padding: 28px;
+box-shadow: var(--shadow);
+backdrop-filter: blur(10px);
+display: flex;
+flex-direction: column;
+gap: 20px;
+}
+.card-header {
+text-align: center;
+margin-bottom: 15px;
+}
+.card-header h1 {
+font-size: 2.2rem;
+margin: 0;
+background: linear-gradient(90deg, var(--accent), var(--accent-2));
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+}
+.card-header p {
+color: var(--muted);
+margin: 8px 0 0;
+}
+.challenge-info {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+gap: 20px;
+margin-bottom: 20px;
+}
+.info-item {
+background: rgba(10,14,33,.65);
+border-radius: 14px;
+padding: 18px;
+text-align: center;
+}
+.info-item h3 {
+margin: 0 0 10px;
+color: var(--accent-2);
+font-size: 1.2rem;
+}
+.info-item p {
+margin: 0;
+font-size: 1.4rem;
+font-weight: 700;
+}
+.target-display {
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 15px;
+margin: 15px 0;
+}
+.target-item {
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 15px;
+background: rgba(10,14,33,.65);
+border-radius: 14px;
+min-width: 100px;
+}
+.target-value {
+font-size: 2rem;
+font-weight: 700;
+color: var(--accent-2);
+}
+.target-label {
+font-size: 0.9rem;
+color: var(--muted);
+}
+.challenge-description {
+background: rgba(10,14,33,.65);
+border-radius: 14px;
+padding: 20px;
+margin: 15px 0;
+}
+.challenge-description h3 {
+margin: 0 0 15px;
+color: var(--accent-2);
+}
+.description-text {
+line-height: 1.6;
+margin: 0;
+}
+.reward-section {
+text-align: center;
+padding: 15px;
+background: linear-gradient(135deg, rgba(49,233,129,0.15), rgba(124,92,255,0.15));
+border-radius: 14px;
+margin: 15px 0;
+}
+.reward-section h3 {
+margin: 0 0 10px;
+color: var(--accent-2);
+}
+.reward-badge {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+background: rgba(49,233,129,0.2);
+border: 1px solid var(--ok);
+border-radius: 20px;
+padding: 8px 16px;
+margin-top: 10px;
+}
+.action-buttons {
+display: flex;
+justify-content: center;
+gap: 15px;
+margin-top: 20px;
+}
+.btn{
+appearance:none; border:none; cursor:pointer; padding:14px 18px; border-radius:14px; 
+font-weight:800; letter-spacing:.6px;
+background: linear-gradient(90deg, var(--accent), var(--accent-2)); color:#08131a;
+box-shadow: 0 8px 20px rgba(124,92,255,.35), inset 0 -2px 0 rgba(0,0,0,.25);
+transition: transform .08s ease, box-shadow .2s ease, filter .2s ease;
+min-width: 160px;
+}
+.btn:active{transform: translateY(1px)}
+.btn:hover{filter:saturate(115%)}
+.btn:focus-visible{outline: 3px dashed var(--accent-2); outline-offset:4px}
+.btn-secondary {
+background: linear-gradient(90deg, #6a7080, #8a92b0);
+}
+.leaderboard-section {
+width: min(800px, 92vw);
+background: var(--panel);
+border-radius: var(--radius);
+padding: 28px;
+box-shadow: var(--shadow);
+backdrop-filter: blur(10px);
+}
+.leaderboard-header {
+text-align: center;
+margin-bottom: 20px;
+}
+.leaderboard-header h2 {
+font-size: 1.8rem;
+margin: 0;
+color: var(--accent-2);
+}
+.leaderboard-list {
+display: flex;
+flex-direction: column;
+gap: 12px;
+}
+.leaderboard-item {
+display: grid;
+grid-template-columns: 40px 1fr 80px 80px;
+gap: 15px;
+align-items: center;
+padding: 12px 16px;
+background: rgba(10,14,33,.65);
+border-radius: 12px;
+transition: transform 0.2s ease;
+}
+.leaderboard-item:hover {
+transform: translateX(5px);
+}
+.leaderboard-rank {
+font-weight: 700;
+font-size: 1.2rem;
+text-align: center;
+color: var(--accent-2);
+}
+.leaderboard-player {
+display: flex;
+align-items: center;
+gap: 10px;
+}
+.player-avatar {
+font-size: 1.5rem;
+}
+.leaderboard-score {
+font-weight: 700;
+text-align: right;
+}
+.leaderboard-darts {
+text-align: center;
+color: var(--muted);
+}
+.leaderboard-item:nth-child(1) .leaderboard-rank {
+color: gold;
+font-size: 1.4rem;
+}
+.leaderboard-item:nth-child(2) .leaderboard-rank {
+color: silver;
+}
+.leaderboard-item:nth-child(3) .leaderboard-rank {
+color: #cd7f32; /* Bronze */
+}
+.progress-section {
+width: min(800px, 92vw);
+background: var(--panel);
+border-radius: var(--radius);
+padding: 28px;
+box-shadow: var(--shadow);
+backdrop-filter: blur(10px);
+margin-bottom: 20px;
+}
+.progress-header {
+text-align: center;
+margin-bottom: 20px;
+}
+.progress-header h2 {
+font-size: 1.8rem;
+margin: 0;
+color: var(--accent-2);
+}
+.progress-container {
+display: flex;
+flex-direction: column;
+gap: 15px;
+}
+.progress-item {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 12px 16px;
+background: rgba(10,14,33,.65);
+border-radius: 12px;
+}
+.progress-info {
+display: flex;
+align-items: center;
+gap: 12px;
+}
+.progress-icon {
+font-size: 1.5rem;
+color: var(--accent-2);
+}
+.progress-details h3 {
+margin: 0;
+font-size: 1rem;
+}
+.progress-details p {
+margin: 4px 0 0;
+font-size: 0.9rem;
+color: var(--muted);
+}
+.progress-status {
+padding: 6px 12px;
+border-radius: 20px;
+font-size: 0.9rem;
+font-weight: 600;
+}
+.status-completed {
+background: rgba(49,233,129,0.2);
+color: var(--ok);
+}
+.status-pending {
+background: rgba(255,255,255,0.1);
+color: var(--muted);
+}
+footer {
+padding: 12px 20px;
+text-align: center;
+color: var(--muted);
+background: var(--panel);
+backdrop-filter: blur(10px);
+}
+/* Music toggle button */
+.music-toggle {
+position: fixed;
+bottom: 16px;
+left: 16px;
+width: 50px;
+height: 50px;
+border-radius: 50%;
+border: none;
+display: grid;
+place-items: center;
+cursor: pointer;
+font-size: 1.3rem;
+background: linear-gradient(135deg, var(--accent), var(--accent-2));
+color: #fff;
+box-shadow: 0 4px 12px rgba(0,0,0,.3);
+transition: transform .15s;
+z-index: 10;
+}
+.music-toggle:hover {
+transform: scale(1.1);
+}
+@media (max-width: 700px) {
+.challenge-info {
+grid-template-columns: 1fr;
+}
+.target-display {
+flex-direction: column;
+align-items: stretch;
+}
+.action-buttons {
+flex-direction: column;
+}
+.leaderboard-item {
+grid-template-columns: 30px 1fr 70px;
+grid-template-rows: auto auto;
+}
+.leaderboard-darts {
+grid-column: 3;
+grid-row: 1 / span 2;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+}
+.leaderboard-score {
+grid-column: 2;
+text-align: left;
+padding-left: 40px;
+}
+}
+</style>
+</head>
+<body>
+<div class="grid" aria-hidden="true"></div>
+<div class="stars" aria-hidden="true"></div>
+<header>
+<div class="header-title">
+<div class="logo">▲</div>
+<h1>Arcadia — Daily Challenge</h1>
+</div>
+<button class="header-btn" id="back-btn">← Back to Hub</button>
+</header>
+<main class="main-content">
+<section class="challenge-card">
+<div class="card-header">
+<h1>Today's Challenge</h1>
+<p>Complete this special challenge to earn bonus rewards!</p>
+</div>
+<div class="challenge-info">
+<div class="info-item">
+<h3>Challenge Type</h3>
+<p>Precision Master</p>
+</div>
+<div class="info-item">
+<h3>Time Remaining</h3>
+<p id="time-remaining">23:48:12</p>
+</div>
+<div class="info-item">
+<h3>Participants</h3>
+<p>1,428</p>
+</div>
+</div>
+<div class="target-display">
+<div class="target-item">
+<span class="target-value">100</span>
+<span class="target-label">Points</span>
+</div>
+<div style="font-size: 1.5rem;">→</div>
+<div class="target-item">
+<span class="target-value">12</span>
+<span class="target-label">Darts Max</span>
+</div>
+<div style="font-size: 1.5rem;">→</div>
+<div class="target-item">
+<span class="target-value">3×</span>
+<span class="target-label">Bullseyes</span>
+</div>
+</div>
+<div class="challenge-description">
+<h3>Challenge Objectives</h3>
+<p class="description-text">
+Reach exactly 100 points using no more than 12 darts. For an extra challenge,
+hit at least 3 bullseyes during your throws. Your score will be ranked based on
+how quickly you complete the challenge and how many bonus objectives you achieve.
+</p>
+</div>
+<div class="reward-section">
+<h3>Completion Rewards</h3>
+<p>+500 XP · +75 Arcade Credits · Exclusive "Precision Master" Badge</p>
+<div class="reward-badge">
+<span> </span> Daily Challenge Champion
+</div>
+</div>
+<div class="action-buttons">
+<button class="btn" id="start-challenge">Start Challenge</button>
+<button class="btn btn-secondary" id="practice-btn">Practice First</button>
+</div>
+</section>
+<section class="progress-section">
+<div class="progress-header">
+<h2>Your Progress</h2>
+</div>
+<div class="progress-container">
+<div class="progress-item">
+<div class="progress-info">
+<div class="progress-icon"> </div>
+<div class="progress-details">
+<h3>Complete the Challenge</h3>
+<p>Reach 100 points in 12 darts or less</p>
+</div>
+</div>
+<div class="progress-status status-pending">Not Started</div>
+</div>
+<div class="progress-item">
+<div class="progress-info">
+<div class="progress-icon"> </div>
+<div class="progress-details">
+<h3>Bullseye Bonus</h3>
+<p>Hit 3 bullseyes during your attempt</p>
+</div>
+</div>
+<div class="progress-status status-pending">0/3</div>
+</div>
+<div class="progress-item">
+<div class="progress-info">
+<div class="progress-icon"> </div>
+<div class="progress-details">
+<h3>Speed Run</h3>
+<p>Complete the challenge in under 8 darts</p>
+</div>
+</div>
+<div class="progress-status status-pending">Not Achieved</div>
+</div>
+</div>
+</section>
+<section class="leaderboard-section">
+<div class="leaderboard-header">
+<h2>Today's Leaderboard</h2>
+</div>
+<div class="leaderboard-list">
+<div class="leaderboard-item">
+<div class="leaderboard-rank">1</div>
+<div class="leaderboard-player">
+<span class="player-avatar"> </span>
+<span>DartMaster3000</span>
+</div>
+<div class="leaderboard-score">100 pts</div>
+<div class="leaderboard-darts">6 darts</div>
+</div>
+<div class="leaderboard-item">
+<div class="leaderboard-rank">2</div>
+<div class="leaderboard-player">
+<span class="player-avatar"> </span>
+<span>BullseyeBandit</span>
+</div>
+<div class="leaderboard-score">100 pts</div>
+<div class="leaderboard-darts">7 darts</div>
+</div>
+<div class="leaderboard-item">
+<div class="leaderboard-rank">3</div>
+<div class="leaderboard-player">
+<span class="player-avatar"> </span>
+<span>QuickDraw</span>
+</div>
+<div class="leaderboard-score">100 pts</div>
+<div class="leaderboard-darts">8 darts</div>
+</div>
+<div class="leaderboard-item">
+<div class="leaderboard-rank">4</div>
+<div class="leaderboard-player">
+<span class="player-avatar"> </span>
+<span>TargetTracker</span>
+</div>
+<div class="leaderboard-score">100 pts</div>
+<div class="leaderboard-darts">9 darts</div>
+</div>
+<div class="leaderboard-item">
+<div class="leaderboard-rank">5</div>
+<div class="leaderboard-player">
+<span class="player-avatar"> </span>
+<span>LuckyShot</span>
+</div>
+<div class="leaderboard-score">100 pts</div>
+<div class="leaderboard-darts">10 darts</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Music toggle button -->
+<button class="music-toggle" id="music-toggle"> </button>
+<footer>© 2025 Arcadia Network</footer>
+<!-- Background music -->
+<audio id="bgMusic" loop>
+<source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+type="audio/mpeg">
+</audio>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+// Get DOM elements
+const backBtn = document.getElementById('back-btn');
+const musicToggle = document.getElementById('music-toggle');
+const bgMusic = document.getElementById('bgMusic');
+const startChallengeBtn = document.getElementById('start-challenge');
+const practiceBtn = document.getElementById('practice-btn');
+const timeRemaining = document.getElementById('time-remaining');
+// Music state
+let musicPlaying = false;
+// Back to Hub button
+backBtn.addEventListener('click', function() {
+window.location.href = 'home.html';
+});
+// Music toggle
+musicToggle.addEventListener('click', function() {
+if (musicPlaying) {
+bgMusic.pause();
+musicPlaying = false;
+musicToggle.textContent = ' ';
+} else {
+bgMusic.play();
+musicPlaying = true;
+musicToggle.textContent = ' ';
+}
+});
+// Start challenge button
+startChallengeBtn.addEventListener('click', function() {
+alert('Starting today\'s challenge! Good luck!');
+// In a real implementation, this would redirect to the game with challenge parameters
+});
+// Practice button
+practiceBtn.addEventListener('click', function() {
+alert('Opening practice mode...');
+// In a real implementation, this would redirect to a practice version
+});
+// Update time remaining
+function updateTime() {
+// Set the reset time to midnight
+const now = new Date();
+const resetTime = new Date();
+resetTime.setHours(24, 0, 0, 0);
+// Calculate difference
+const diff = resetTime - now;
+// Format time as HH:MM:SS
+const hours = Math.floor(diff / (1000 * 60 * 60));
+const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+timeRemaining.textContent = `${hours.toString().padStart(2, 
+'0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+}
+// Update time immediately and set interval
+updateTime();
+setInterval(updateTime, 1000);
+});
+</script>
+</body>
+</html>

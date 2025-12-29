@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Arcadia — Chat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&display=sw
+ap" rel="stylesheet">
+<style>
+:root {
+--bg:#080a12;
+--panel:#0f1326cc;
+--text:#e7ecff;
+--muted:#b7c0ff;
+--accent:#7c5cff;
+--accent-2:#00ffd1;
+--radius:18px;
+--shadow:0 10px 30px rgba(0,0,0,.35);
+}
+body {
+margin:0;
+font-family:"Chakra Petch", sans-serif;
+background: var(--bg);
+color: var(--text);
+height:100vh;
+display:flex;
+flex-direction:column;
+}
+body::before {
+content:"";
+position:fixed;
+top:0; left:0; right:0; bottom:0;
+background: radial-gradient(circle at 20% 20%, #7c5cff55, transparent 60%),
+radial-gradient(circle at 80% 80%, #00ffd155, transparent 60%),
+radial-gradient(circle at 50% 50%, #ff3d7555, transparent 70%);
+animation: moveBg 20s infinite alternate ease-in-out;
+z-index:-1;
+}
+@keyframes moveBg {
+0% { background-position: 20% 20%, 80% 80%, 50% 50%; }
+50% { background-position: 30% 10%, 70% 90%, 40% 60%; }
+100% { background-position: 20% 30%, 80% 70%, 60% 40%; }
+}
+header {
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:14px 22px;
+background: var(--panel);
+backdrop-filter: blur(10px);
+}
+.header-btn {
+background:none;
+border:none;
+color: var(--text);
+font-size:1.1rem;
+cursor:pointer;
+padding:8px 12px;
+border-radius:12px;
+transition: background .2s;
+}
+.header-btn:hover {
+background: var(--accent);
+color:#fff;
+}
+main {
+flex:1;
+display:flex;
+overflow:hidden;
+}
+/* Sidebar friends list */
+.sidebar {
+width:250px;
+background: var(--panel);
+display:flex;
+flex-direction:column;
+padding:20px;
+border-right:2px solid rgba(255,255,255,0.1);
+}
+.friend {
+padding:10px;
+border-radius:var(--radius);
+cursor:pointer;
+transition: background .2s;
+margin-bottom:10px;
+color:var(--muted);
+}
+.friend:hover, .friend.active {
+background:linear-gradient(135deg, var(--accent), var(--accent-2));
+color:#fff;
+}
+/* Chat window */
+.chat-window {
+flex:1;
+display:flex;
+flex-direction:column;
+background: rgba(255,255,255,0.02);
+padding:20px;
+}
+.messages {
+flex:1;
+overflow-y:auto;
+margin-bottom:20px;
+}
+.msg {
+margin:8px 0;
+padding:10px 14px;
+border-radius:var(--radius);
+max-width:70%;
+word-wrap:break-word;
+box-shadow: var(--shadow);
+position:relative;
+font-size:1rem;
+}
+.msg.you {
+background: var(--accent);
+color:#fff;
+margin-left:auto;
+}
+.msg.friend {
+background: var(--panel);
+color: var(--text);
+margin-right:auto;
+}
+.meta {
+font-size:0.75rem;
+opacity:0.7;
+margin-top:4px;
+display:flex;
+justify-content:flex-end;
+gap:8px;
+}
+.msg.friend .meta {
+justify-content:flex-start;
+}
+/* Input bar */
+.input-bar {
+display:flex;
+gap:10px;
+}
+.input-bar input {
+flex:1;
+padding:12px;
+border-radius:var(--radius);
+border:none;
+outline:none;
+font-size:1rem;
+background: var(--panel);
+color: var(--text);
+}
+.input-bar button {
+padding:12px 20px;
+border:none;
+border-radius:var(--radius);
+background: linear-gradient(135deg, var(--accent), var(--accent-2));
+color:#fff;
+cursor:pointer;
+transition: transform .2s;
+}
+.input-bar button:hover {
+transform:scale(1.05);
+}
+footer {
+padding:12px 20px;
+text-align:center;
+color:var(--muted);
+}
+</style>
+</head>
+<body>
+<header>
+<button class="header-btn" onclick="window.location.href='home.html'"> </button>
+<h2>Chat</h2>
+<div style="width:40px;"></div>
+</header>
+<main>
+<!-- Sidebar with friends -->
+<div class="sidebar">
+<div class="friend active" data-name="Madara">Madara</div>
+<div class="friend" data-name="Sakura">Sakura</div>
+<div class="friend" data-name="Itachi">Itachi</div>
+<div class="friend" data-name="Kakashi">Kakashi</div>
+<div class="friend" data-name="Naruto">Naruto</div>
+<div class="friend" data-name="Kakashi">Kakashi</div>
+<div class="friend" data-name="Sasuke">Sasuke</div>
+<div class="friend" data-name="Pain">Pain</div>
+<div class="friend" data-name="Hinata">Hinata</div>
+<div class="friend" data-name="Sai">Sai</div>
+<div class="friend" data-name="Ino">Ino</div>
+</div>
+<!-- Chat window -->
+<div class="chat-window">
+<div class="messages" id="messages">
+<div class="msg friend">
+Hey, ready for the game?
+<div class="meta">10:00 AM</div>
+</div>
+<div class="msg you">
+Yep! Let’s go 
+<div class="meta">10:01 AM • ✓ Read</div>
+</div>
+</div>
+<div class="input-bar">
+<input type="text" id="chatInput" placeholder="Type a message...">
+<button id="sendBtn">Send</button>
+</div>
+</div>
+</main>
+<footer>© 2025 Arcadia Network</footer>
+<script>
+const input = document.getElementById("chatInput");
+const sendBtn = document.getElementById("sendBtn");
+const messages = document.getElementById("messages");
+function getTime() {
+const now = new Date();
+let h = now.getHours();
+let m = now.getMinutes().toString().padStart(2,"0");
+const ampm = h >= 12 ? "PM" : "AM";
+h = h % 12 || 12;
+return `${h}:${m} ${ampm}`;
+}
+// Send message
+function sendMessage() {
+const text = input.value.trim();
+if(text !== ""){
+const msg = document.createElement("div");
+msg.className = "msg you";
+msg.innerHTML = `${text}<div class="meta">${getTime()} • ✓ Sent</div>`;
+messages.appendChild(msg);
+input.value = "";
+messages.scrollTop = messages.scrollHeight;
+// Simulate read status after 2s
+setTimeout(()=>{
+const meta = msg.querySelector(".meta");
+if(meta) meta.textContent = `${getTime()} • ✓ Read`;
+},2000);
+}
+}
+sendBtn.addEventListener("click", sendMessage);
+input.addEventListener("keypress", e=>{
+if(e.key==="Enter") sendMessage();
+});
+// Switch friend chat (placeholder)
+document.querySelectorAll(".friend").forEach(f=>{
+f.addEventListener("click", ()=>{
+document.querySelectorAll(".friend").forEach(fr=>fr.classList.remove("active"));
+f.classList.add("active");
+messages.innerHTML = `<div class="msg friend">Chat with ${f.dataset.name} started.<div 
+class="meta">${getTime()}</div></div>`;
+});
+});
+</script>
+</body>
+</html>

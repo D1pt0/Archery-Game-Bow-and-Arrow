@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Database Connector</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --success: #2ecc71;
+            --danger: #e74c3c;
+            --warning: #f39c12;
+            --dark: #2c3e50;
+            --light: #ecf0f1;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .connection-form {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .form-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--dark);
+            font-size: 1rem;
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            background: var(--primary);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        button:hover {
+            background: #2980b9;
+        }
+        
+        .status-panel {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .status-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .status-content {
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            min-height: 200px;
+            margin-bottom: 20px;
+        }
+        
+        .status-message {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+        
+        .success {
+            background: rgba(46, 204, 113, 0.2);
+            border-left: 4px solid var(--success);
+        }
+        
+        .error {
+            background: rgba(231, 76, 60, 0.2);
+            border-left: 4px solid var(--danger);
+        }
+        
+        .info {
+            background: rgba(52, 152, 219, 0.2);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .connection-visual {
+            width: 100%;
+            margin-top: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .visual-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .diagram {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .component {
+            text-align: center;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            width: 150px;
+        }
+        
+        .component-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .connection-line {
+            flex-grow: 1;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), transparent);
+            margin: 0 10px;
+        }
+        
+        .help-section {
+            margin-top: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .help-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        .code-sample {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+        
+        pre {
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .notes {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .diagram {
+                flex-direction: column;
+            }
+            
+            .connection-line {
+                width: 3px;
+                height: 40px;
+                margin: 10px 0;
+                background: linear-gradient(180deg, var(--primary), transparent);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Game Database Connector</h1>
+            <p class="subtitle">Connect your HTML game to your SQL database with PHP</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="connection-form">
+                <h2 class="form-title">Database Connection Settings</h2>
+                <div class="form-group">
+                    <label for="host">Host</label>
+                    <input type="text" id="host" value="localhost">
+                </div>
+                <div class="form-group">
+                    <label for="database">Database Name</label>
+                    <input type="text" id="database" value="game_db">
+                </div>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" value="root">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" value="">
+                </div>
+                <div class="form-group">
+                    <label for="port">Port</label>
+                    <input type="number" id="port" value="3306">
+                </div>
+                <button id="test-connection">Test Connection</button>
+            </div>
+            
+            <div class="status-panel">
+                <h2 class="status-title">Connection Status</h2>
+                <div class="status-content" id="status-content">
+                    <div class="status-message info">
+                        Please enter your database details and test the connection.
+                    </div>
+                </div>
+                <button id="generate-config">Generate PHP Configuration</button>
+            </div>
+        </div>
+        
+        <div class="connection-visual">
+            <h2 class="visual-title">Database Connection Flow</h2>
+            <div class="diagram">
+                <div class="component">
+                    <div class="component-icon">🌐</div>
+                    <div>Web Browser</div>
+                </div>
+                <div class="connection-line"></div>
+                <div class="component">
+                    <div class="component-icon">📄</div>
+                    <div>HTML/CSS/JS</div>
+                </div>
+                <div class="connection-line"></div>
+                <div class="component">
+                    <div class="component-icon">🐘</div>
+                    <div>PHP</div>
+                </div>
+                <div class="connection-line"></div>
+                <div class="component">
+                    <div class="component-icon">🗃️</div>
+                    <div>MySQL</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="help-section">
+            <h2 class="help-title">PHP Database Connection Guide</h2>
+            
+            <div class="code-sample">
+                <h3>Sample PHP Connection Code (db_connection.php)</h3>
+                <pre>
+&lt;?php
+$host = 'localhost';
+$dbname = 'game_db';
+$username = 'root';
+$password = '';
+$port = 3306;
+
+try {
+    $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    echo "Connected successfully";
+} catch(PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+?&gt;
+                </pre>
+            </div>
+            
+            <div class="code-sample">
+                <h3>Sample PHP Query Code (get_player.php)</h3>
+                <pre>
+&lt;?php
+include 'db_connection.php';
+
+try {
+    $stmt = $pdo->prepare("SELECT * FROM Player WHERE Player_ID = :id");
+    $stmt->bindParam(':id', $player_id, PDO::PARAM_INT);
+    $stmt->execute();
+    
+    $player = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    if ($player) {
+        echo json_encode($player);
+    } else {
+        echo json_encode(["error" => "Player not found"]);
+    }
+} catch(PDOException $e) {
+    echo json_encode(["error" => $e->getMessage()]);
+}
+?&gt;
+                </pre>
+            </div>
+            
+            <div class="notes">
+                <h3>Next Steps for Your Project:</h3>
+                <ol>
+                    <li>Create your MySQL database based on your schema</li>
+                    <li>Set up a PHP development environment (XAMPP, WAMP, or MAMP)</li>
+                    <li>Create PHP files to handle database operations</li>
+                    <li>Modify your HTML files to use AJAX calls to PHP endpoints</li>
+                    <li>Test each functionality step by step</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const testBtn = document.getElementById('test-connection');
+            const generateBtn = document.getElementById('generate-config');
+            const statusContent = document.getElementById('status-content');
+            
+            testBtn.addEventListener('click', function() {
+                const host = document.getElementById('host').value;
+                const database = document.getElementById('database').value;
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                const port = document.getElementById('port').value;
+                
+                // Clear previous status messages
+                statusContent.innerHTML = '';
+                
+                // Add a testing message
+                const testingMsg = document.createElement('div');
+                testingMsg.className = 'status-message info';
+                testingMsg.textContent = 'Testing connection to database...';
+                statusContent.appendChild(testingMsg);
+                
+                // Simulate connection testing (in a real scenario, this would be an AJAX call to a PHP script)
+                setTimeout(() => {
+                    // Remove testing message
+                    statusContent.innerHTML = '';
+                    
+                    // Simulate random success/failure for demo purposes
+                    const isSuccess = Math.random() > 0.3;
+                    
+                    if (isSuccess) {
+                        const successMsg = document.createElement('div');
+                        successMsg.className = 'status-message success';
+                        successMsg.textContent = '✓ Connection successful! Database credentials are valid.';
+                        statusContent.appendChild(successMsg);
+                    } else {
+                        const errorMsg = document.createElement('div');
+                        errorMsg.className = 'status-message error';
+                        errorMsg.textContent = '✗ Connection failed. Please check your credentials and try again.';
+                        statusContent.appendChild(errorMsg);
+                    }
+                }, 1500);
+            });
+            
+            generateBtn.addEventListener('click', function() {
+                const host = document.getElementById('host').value;
+                const database = document.getElementById('database').value;
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                const port = document.getElementById('port').value;
+                
+                // Clear previous status messages
+                statusContent.innerHTML = '';
+                
+                const configMsg = document.createElement('div');
+                configMsg.className = 'status-message info';
+                configMsg.innerHTML = `
+                    <strong>PHP Configuration Code:</strong><br><br>
+                    <pre>
+&lt;?php
+$host = '${host}';
+$dbname = '${database}';
+$username = '${username}';
+$password = '${password}';
+$port = ${port};
+
+try {
+    $pdo = new PDO("mysql:host=$host;port=$port;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch(PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
+}
+?&gt;
+                    </pre>
+                    <p>Save this code as <strong>db_connection.php</strong> and include it in your PHP files.</p>
+                `;
+                statusContent.appendChild(configMsg);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Classic Dart Game — Arcadia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Jet
+Brains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+--bg:#080a12;
+--panel:#0f1326cc;
+--panel-solid:#0f1326;
+--text:#e7ecff;
+--muted:#b7c0ff;
+--accent:#7c5cff;
+--accent-2:#00ffd1;
+--error:#ff6b6b;
+--ok:#31e981;
+--shadow:0 10px 30px rgba(0,0,0,.35), 0 0 0 1px rgba(124,92,255,.08) inset;
+--radius:22px;
+}
+*{box-sizing:border-box}
+html,body{height:100%; margin:0;}
+body{
+font-family:"Chakra Petch", system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, 
+Noto Sans, "Helvetica Neue", Arial, "Apple Color Emoji","Segoe UI Emoji";
+color:var(--text);
+background: radial-gradient(1200px 600px at 10% -10%, #1b1f3bcc 0%, transparent 60%),
+radial-gradient(1000px 500px at 90% 110%, #0b122ecc 0%, transparent 60%),
+radial-gradient(800px 800px at 50% 50%, #0a0e21 0%, #080a12 60%);
+display: flex;
+flex-direction: column;
+overflow: hidden;
+}
+/* Retro grid */
+.grid{
+position:fixed; inset:0; pointer-events:none; opacity:.35; filter:drop-shadow(0 0 6px
+rgba(124,92,255,.25));
+background:
+repeating-linear-gradient(0deg, transparent 0 58px, rgba(124,92,255,.06) 58px 59px),
+repeating-linear-gradient(90deg, transparent 0 58px, rgba(124,92,255,.06) 58px 59px);
+mask: radial-gradient(ellipse at center, black 0%, transparent 70%);
+z-index: -1;
+}
+/* Floating stars */
+.stars{
+position:fixed; inset:0; pointer-events:none; opacity:.5;
+background: radial-gradient(2px 2px at 20% 30%, #fff 50%, transparent 51%),
+radial-gradient(2px 2px at 80% 70%, #fff 50%, transparent 51%),
+radial-gradient(1.5px 1.5px at 65% 20%, #fff 50%, transparent 51%),
+radial-gradient(1.5px 1.5px at 35% 80%, #fff 50%, transparent 51%);
+animation: drift 22s linear infinite;
+z-index: -1;
+}
+@keyframes drift{
+from{transform: translateY(0)}
+to{transform: translateY(-40px)}
+}
+header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+padding: 14px 22px;
+background: var(--panel);
+backdrop-filter: blur(10px);
+}
+.header-title {
+display: flex;
+align-items: center;
+gap: 12px;
+}
+.logo{
+width:36px; height:36px; border-radius:10px; display:grid; place-items:center;
+background: radial-gradient(circle at 30% 30%, var(--accent-2), var(--accent) 60%);
+color:#02040f; font-weight:900; box-shadow:inset 0 0 16px rgba(0,0,0,.25), 0 6px 30px
+rgba(124,92,255,.35);
+}
+.header-btn {
+background: none;
+border: none;
+color: var(--text);
+font-size: 1.2rem;
+cursor: pointer;
+padding: 8px 12px;
+border-radius: 12px;
+transition: background .2s;
+}
+.header-btn:hover {
+background: var(--accent);
+}
+.game-container {
+display: flex;
+flex: 1;
+padding: 20px;
+gap: 20px;
+}
+.players-panel {
+width: 280px;
+background: var(--panel);
+border-radius: var(--radius);
+padding: 20px;
+box-shadow: var(--shadow);
+backdrop-filter: blur(10px);
+display: flex;
+flex-direction: column;
+gap: 15px;
+}
+.player {
+display: flex;
+align-items: center;
+gap: 12px;
+padding: 12px;
+border-radius: 14px;
+background: rgba(10,14,33,.65);
+transition: all 0.3s ease;
+}
+.player.active {
+background: linear-gradient(135deg, var(--accent)33, rgba(10,14,33,.65));
+box-shadow: 0 0 15px rgba(124,92,255,.3);
+}
+.player-avatar {
+font-size: 1.8rem;
+}
+.player-info {
+flex: 1;
+}
+.player-name {
+font-weight: 600;
+margin: 0;
+}
+.player-score {
+font-size: 1.2rem;
+font-weight: 700;
+color: var(--accent-2);
+margin: 0;
+}
+.game-board {
+flex: 1;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+gap: 20px;
+position: relative;
+}
+.dartboard-container {
+position: relative;
+width: 450px;
+height: 450px;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.dartboard {
+width: 400px;
+height: 400px;
+position: relative;
+border-radius: 50%;
+display: flex;
+align-items: center;
+justify-content: center;
+overflow: hidden;
+background:
+radial-gradient(circle at center, #0ff 0%, #0ff 5%, transparent 6%), /* bullseye */
+radial-gradient(circle at center, #0ff2 0%, #0ff2 12%, transparent 13%), /* glow around bull 
+*/
+conic-gradient(
+from 0deg at 50% 50%,
+rgba(0,255,255,0.9) 0deg 15deg, #0a0e21 15deg 30deg,
+rgba(0,255,255,0.9) 30deg 45deg, #0a0e21 45deg 60deg,
+rgba(0,255,255,0.9) 60deg 75deg, #0a0e21 75deg 90deg,
+rgba(0,255,255,0.9) 90deg 105deg, #0a0e21 105deg 120deg,
+rgba(0,255,255,0.9) 120deg 135deg, #0a0e21 135deg 150deg,
+rgba(0,255,255,0.9) 150deg 165deg, #0a0e21 165deg 180deg,
+rgba(0,255,255,0.9) 180deg 195deg, #0a0e21 195deg 210deg,
+rgba(0,255,255,0.9) 210deg 225deg, #0a0e21 225deg 240deg,
+rgba(0,255,255,0.9) 240deg 255deg, #0a0e21 255deg 270deg,
+rgba(0,255,255,0.9) 270deg 285deg, #0a0e21 285deg 300deg,
+rgba(0,255,255,0.9) 300deg 315deg, #0a0e21 315deg 330deg,
+rgba(0,255,255,0.9) 330deg 345deg, #0a0e21 345deg 360deg
+);
+box-shadow:
+0 0 20px rgba(0,255,255,0.8),
+0 0 40px rgba(0,255,255,0.6),
+0 0 80px rgba(0,255,255,0.4),
+inset 0 0 25px rgba(0,255,255,0.5);
+transition: transform 0.3s ease;
+}
+/* Segment colors */
+.dartboard::before {
+content: '';
+position: absolute;
+width: 95%;
+height: 95%;
+background: conic-gradient(
+#3e2a14 0deg 18deg, 
+#f0f0f0 18deg 36deg,
+#3e2a14 36deg 54deg,
+#f0f0f0 54deg 72deg,
+#3e2a14 72deg 90deg,
+#f0f0f0 90deg 108deg,
+#3e2a14 108deg 126deg,
+#f0f0f0 126deg 144deg,
+#3e2a14 144deg 162deg,
+#f0f0f0 162deg 180deg,
+#3e2a14 180deg 198deg,
+#f0f0f0 198deg 216deg,
+#3e2a14 216deg 234deg,
+#f0f0f0 234deg 252deg,
+#3e2a14 252deg 270deg,
+#f0f0f0 270deg 288deg,
+#3e2a14 288deg 306deg,
+#f0f0f0 306deg 324deg,
+#3e2a14 324deg 342deg,
+#f0f0f0 342deg 360deg
+);
+border-radius: 50%;
+z-index: 1;
+mask: radial-gradient(circle at center, transparent 77%, black 77.5%);
+}
+.dartboard:hover {
+transform: scale(1.02);
+}
+.dart-thrower {
+position: absolute;
+bottom: -30px;
+left: 50%;
+transform: translateX(-50%);
+width: 50px;
+height: 120px;
+display: flex;
+flex-direction: column;
+align-items: center;
+z-index: 10;
+}
+.dart {
+width: 30px;
+height: 30px;
+background: linear-gradient(to right, #ff6a3d, #ff3b30);
+border-radius: 50% 50% 0 50%;
+transform: rotate(45deg);
+position: relative;
+box-shadow: 0 0 10px rgba(255, 106, 61, 0.7);
+transition: all 0.3s ease;
+cursor: pointer;
+}
+.dart::after {
+content: '';
+position: absolute;
+top: 8px;
+left: 8px;
+width: 10px;
+height: 10px;
+background: #fff;
+border-radius: 50%;
+opacity: 0.8;
+}
+.dart-throw-line {
+width: 2px;
+height: 0;
+background: linear-gradient(to top, rgba(255,255,255,0.8), transparent);
+margin-top: 10px;
+transition: height 0.3s ease;
+}
+.dart-thrower.aiming .dart {
+transform: rotate(45deg) translateY(-10px);
+}
+.dart-thrower.aiming .dart-throw-line {
+height: 100px;
+}
+.dart-thrower.throwing .dart {
+animation: throwDart 0.5s forwards;
+}
+@keyframes throwDart {
+0% {
+transform: rotate(45deg) translateY(0);
+opacity: 1;
+}
+50% {
+transform: rotate(45deg) translateY(-200px) translateX(0);
+opacity: 0.8;
+}
+100% {
+transform: rotate(45deg) translateY(-400px) translateX(0);
+opacity: 0;
+}
+}
+.controls {
+display: flex;
+gap: 15px;
+margin-top: 20px;
+}
+.btn{
+appearance:none; border:none; cursor:pointer; padding:14px 18px; border-radius:14px; 
+font-weight:800; letter-spacing:.6px;
+background: linear-gradient(90deg, var(--accent), var(--accent-2)); color:#08131a;
+box-shadow: 0 8px 20px rgba(124,92,255,.35), inset 0 -2px 0 rgba(0,0,0,.25);
+transition: transform .08s ease, box-shadow .2s ease, filter .2s ease;
+}
+.btn:active{transform: translateY(1px)}
+.btn:hover{filter:saturate(115%)}
+.btn:focus-visible{outline: 3px dashed var(--accent-2); outline-offset:4px}
+.throw-btn {
+font-size: 1.2rem;
+min-width: 140px;
+}
+.score-display {
+font-size: 2rem;
+font-weight: 700;
+color: var(--accent-2);
+text-shadow: 0 0 10px rgba(0,255,209,.5);
+padding: 10px 20px;
+background: rgba(10,14,33,.65);
+border-radius: 14px;
+}
+.dart-marker {
+position: absolute;
+font-size: 1.8rem;
+transform: translate(-50%, -50%);
+z-index: 20;
+text-shadow: 0 0 8px currentColor;
+transition: all 0.3s ease;
+}
+.turn-info {
+font-size: 1.2rem;
+color: var(--muted);
+margin-bottom: 10px;
+}
+.darts-left {
+display: flex;
+gap: 8px;
+margin-top: 10px;
+}
+.dart-icon {
+font-size: 1.5rem;
+opacity: 0.5;
+}
+.dart-icon.available {
+opacity: 1;
+color: var(--accent-2);
+}
+footer {
+padding: 12px 20px;
+text-align: center;
+color: var(--muted);
+background: var(--panel);
+backdrop-filter: blur(10px);
+}
+/* Announcement overlay */
+.announcement {
+position: fixed;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+background: rgba(15, 19, 38, 0.95);
+border: 3px solid var(--accent);
+border-radius: var(--radius);
+padding: 30px 40px;
+text-align: center;
+z-index: 100;
+box-shadow: 0 0 40px rgba(124, 92, 255, 0.5);
+backdrop-filter: blur(10px);
+display: none;
+}
+.announcement h2 {
+font-size: 2.5rem;
+margin: 0 0 15px 0;
+color: var(--accent-2);
+text-shadow: 0 0 15px rgba(0, 255, 209, 0.7);
+}
+.announcement p {
+font-size: 1.5rem;
+margin: 0;
+color: var(--text);
+}
+/* Music toggle button */
+.music-toggle {
+position: fixed;
+bottom: 16px;
+left: 16px;
+width: 50px;
+height: 50px;
+border-radius: 50%;
+border: none;
+display: grid;
+place-items: center;
+cursor: pointer;
+font-size: 1.3rem;
+background: linear-gradient(135deg, var(--accent), var(--accent-2));
+color: #fff;
+box-shadow: 0 4px 12px rgba(0,0,0,.3);
+transition: transform .15s;
+z-index: 10;
+}
+.music-toggle:hover {
+transform: scale(1.1);
+}
+.winning-score {
+position: absolute;
+top: 20px;
+left: 0;
+right: 0;
+text-align: center;
+font-size: 1.2rem;
+color: var(--muted);
+}
+@media (max-width: 900px) {
+.game-container {
+flex-direction: column;
+align-items: center;
+}
+.players-panel {
+width: 100%;
+max-width: 500px;
+flex-direction: row;
+justify-content: space-around;
+}
+.dartboard-container, .dartboard {
+width: 300px;
+height: 300px;
+}
+.announcement {
+width: 90%;
+padding: 20px;
+}
+.announcement h2 {
+font-size: 2rem;
+}
+.announcement p {
+font-size: 1.2rem;
+}
+}
+@media (max-width: 500px) {
+.dartboard-container, .dartboard {
+width: 250px;
+height: 250px;
+}
+.players-panel {
+flex-direction: column;
+}
+.controls {
+flex-direction: column;
+}
+}
+</style>
+</head>
+<body>
+<div class="grid" aria-hidden="true"></div>
+<div class="stars" aria-hidden="true"></div>
+<header>
+<div class="header-title">
+<div class="logo">▲</div>
+<h1>Classic Dart Game — First to 100</h1>
+</div>
+<button class="header-btn" id="back-btn">← Back to Hub</button>
+</header>
+<div class="game-container">
+<div class="players-panel">
+<div class="player active" id="player1">
+<div class="player-avatar"> </div>
+<div class="player-info">
+<h3 class="player-name" id="player1-name">Player 1</h3>
+<p class="player-score" id="player1-score">0</p>
+</div>
+<div class="darts-left">
+<div class="dart-icon available"> </div>
+<div class="dart-icon available"> </div>
+<div class="dart-icon available"> </div>
+</div>
+</div>
+<div class="player" id="player2">
+<div class="player-avatar"> </div>
+<div class="player-info">
+<h3 class="player-name" id="player2-name">Player 2</h3>
+<p class="player-score" id="player2-score">0</p>
+</div>
+<div class="darts-left">
+<div class="dart-icon"> </div>
+<div class="dart-icon"> </div>
+<div class="dart-icon"> </div>
+</div>
+</div>
+</div>
+<div class="game-board">
+<p class="turn-info" id="turn-info">Player 1's turn - Click the dart to throw!</p>
+<div class="winning-score">First to reach 100 points wins!</div>
+<div class="dartboard-container">
+<div class="dartboard" id="dartboard">
+<!-- Dart markers will be placed here by JavaScript -->
+</div>
+<div class="dart-thrower" id="dart-thrower">
+<div class="dart" id="dart"></div>
+<div class="dart-throw-line"></div>
+</div>
+</div>
+<div class="score-display" id="round-score">Round: 0</div>
+<div class="controls">
+<button class="btn throw-btn" id="throw-btn">Throw Dart</button>
+<button class="btn" id="next-btn">Next Player</button>
+</div>
+</div>
+</div>
+<!-- Announcement overlay -->
+<div class="announcement" id="announcement">
+<h2 id="announcement-title">Game Over!</h2>
+<p id="announcement-text">Player 1 wins!</p>
+</div>
+<!-- Music toggle button -->
+<button class="music-toggle" id="music-toggle"> </button>
+<footer>© 2025 Arcadia Network</footer>
+<!-- Background music -->
+<audio id="bgMusic" loop>
+<source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+type="audio/mpeg">
+</audio>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+// Get player names from URL parameters
+const urlParams = new URLSearchParams(window.location.search);
+const player1Name = urlParams.get('player1') || 'Player 1';
+const player2Name = urlParams.get('player2') || 'Player 2';
+document.getElementById('player1-name').textContent = player1Name;
+document.getElementById('player2-name').textContent = player2Name;
+document.getElementById('turn-info').textContent = `${player1Name}'s turn - Click the dart 
+to throw!`;
+// Game state
+const gameState = {
+currentPlayer: 1,
+playerScores: { 1: 0, 2: 0 },
+currentRound: { 1: 0, 2: 0 },
+dartsThrown: 0,
+gameActive: true
+};
+// DOM elements
+const dartboard = document.getElementById('dartboard');
+const dartElement = document.getElementById('dart');
+const dartThrower = document.getElementById('dart-thrower');
+const throwBtn = document.getElementById('throw-btn');
+const nextBtn = document.getElementById('next-btn');
+const roundScoreDisplay = document.getElementById('round-score');
+const turnInfo = document.getElementById('turn-info');
+const backBtn = document.getElementById('back-btn');
+const musicToggle = document.getElementById('music-toggle');
+const bgMusic = document.getElementById('bgMusic');
+const announcement = document.getElementById('announcement');
+const announcementTitle = document.getElementById('announcement-title');
+const announcementText = document.getElementById('announcement-text');
+// Music state
+let musicPlaying = false;
+// Back to Hub button
+backBtn.addEventListener('click', function() {
+window.location.href = 'home.html';
+});
+// Music toggle
+musicToggle.addEventListener('click', function() {
+if (musicPlaying) {
+bgMusic.pause();
+musicPlaying = false;
+musicToggle.textContent = ' ';
+} else {
+bgMusic.play();
+musicPlaying = true;
+musicToggle.textContent = ' ';
+}
+});
+// Show announcement
+function showAnnouncement(title, text) {
+announcementTitle.textContent = title;
+announcementText.textContent = text;
+announcement.style.display = 'block';
+// Auto-hide after 3 seconds
+setTimeout(() => {
+announcement.style.display = 'none';
+}, 3000);
+}
+// Throw dart event
+function throwDart() {
+if (!gameState.gameActive || gameState.dartsThrown >= 3) return;
+// Animate the dart throw
+dartThrower.classList.add('throwing');
+// Simulate a dart throw with random scoring after animation completes
+setTimeout(() => {
+const score = simulateDartThrow();
+gameState.currentRound[gameState.currentPlayer] += score;
+gameState.dartsThrown++;
+// Update UI
+roundScoreDisplay.textContent = `Round: 
+${gameState.currentRound[gameState.currentPlayer]}`;
+// Show announcement for good throws
+if (score >= 25) {
+showAnnouncement('Great Shot!', `+${score} points!`);
+} else if (score >= 15) {
+showAnnouncement('Nice!', `+${score} points`);
+}
+// Update dart icons
+updateDartIcons();
+// Create visual dart on board
+placeDartOnBoard();
+// Reset thrower animation
+dartThrower.classList.remove('throwing');
+dartThrower.classList.remove('aiming');
+// Check if all darts are thrown
+if (gameState.dartsThrown === 3) {
+throwBtn.disabled = true;
+nextBtn.disabled = false;
+}
+}, 500);
+}
+// Click to throw
+dartElement.addEventListener('click', throwDart);
+throwBtn.addEventListener('click', throwDart);
+// Aiming animation
+dartElement.addEventListener('mouseenter', function() {
+if (gameState.gameActive && gameState.dartsThrown < 3) {
+dartThrower.classList.add('aiming');
+}
+});
+dartElement.addEventListener('mouseleave', function() {
+dartThrower.classList.remove('aiming');
+});
+// Next player event
+nextBtn.addEventListener('click', function() {
+if (!gameState.gameActive) return;
+// Update player's total score
+gameState.playerScores[gameState.currentPlayer] += 
+gameState.currentRound[gameState.currentPlayer];
+// Update score display
+document.getElementById(`player${gameState.currentPlayer}-score`).textContent = 
+gameState.playerScores[gameState.currentPlayer];
+// Check for win condition
+if (gameState.playerScores[gameState.currentPlayer] >= 100) {
+endGame();
+return;
+}
+// Switch players
+document.getElementById(`player${gameState.currentPlayer}`).classList.remove('active');
+gameState.currentPlayer = gameState.currentPlayer === 1 ? 2 : 1;
+document.getElementById(`player${gameState.currentPlayer}`).classList.add('active');
+// Reset round
+gameState.currentRound[1] = 0;
+gameState.currentRound[2] = 0;
+gameState.dartsThrown = 0;
+// Update UI
+roundScoreDisplay.textContent = 'Round: 0';
+throwBtn.disabled = false;
+nextBtn.disabled = true;
+updateDartIcons();
+// Clear darts from board
+clearDartsFromBoard();
+// Update turn info
+const currentPlayerName = gameState.currentPlayer === 1 ? player1Name : player2Name;
+turnInfo.textContent = `${currentPlayerName}'s turn - Click the dart to throw!`;
+});
+// Simulate a dart throw with random scoring
+function simulateDartThrow() {
+// More likely to hit lower scores, with occasional high scores
+const random = Math.random();
+if (random < 0.5) return Math.floor(Math.random() * 11); // 0-10 points
+if (random < 0.8) return Math.floor(Math.random() * 11) + 10; // 10-20 points
+if (random < 0.95) return Math.floor(Math.random() * 11) + 20; // 20-30 points
+return Math.floor(Math.random() * 11) + 30; // 30-40 points
+}
+// Update dart icons based on throws left
+function updateDartIcons() {
+const dartIcons = document.querySelectorAll(`#player${gameState.currentPlayer} .dart￾icon`);
+dartIcons.forEach((dart, index) => {
+if (index < gameState.dartsThrown) {
+dart.classList.remove('available');
+} else {
+dart.classList.add('available');
+}
+});
+}
+// Place a visual dart on the board
+function placeDartOnBoard() {
+const dartMarker = document.createElement('div');
+dartMarker.className = 'dart-marker';
+dartMarker.textContent = ' ';
+// Random position on the board
+const angle = Math.random() * Math.PI * 2;
+const distance = 30 + Math.random() * 170; // 30-200px from center
+const x = 200 + Math.cos(angle) * distance;
+const y = 200 + Math.sin(angle) * distance;
+dartMarker.style.left = `${x}px`;
+dartMarker.style.top = `${y}px`;
+// Color based on score area
+if (distance < 40) {
+dartMarker.style.color = '#ff3b30';
+} else if (distance < 80) {
+dartMarker.style.color = '#7c5cff';
+} else if (distance < 160) {
+dartMarker.style.color = '#00ffd1';
+} else {
+dartMarker.style.color = '#31e981';
+}
+dartboard.appendChild(dartMarker);
+// Add entrance animation
+setTimeout(() => {
+dartMarker.style.transform = 'translate(-50%, -50%) scale(1.2)';
+setTimeout(() => {
+dartMarker.style.transform = 'translate(-50%, -50%) scale(1)';
+}, 200);
+}, 10);
+}
+// Clear all darts from the board
+function clearDartsFromBoard() {
+const darts = document.querySelectorAll('.dart-marker');
+darts.forEach(dart => {
+dart.style.transform = 'translate(-50%, -50%) scale(0)';
+setTimeout(() => dart.remove(), 300);
+});
+}
+// End the game
+function endGame() {
+gameState.gameActive = false;
+const winnerName = gameState.currentPlayer === 1 ? player1Name : player2Name;
+const winnerScore = gameState.playerScores[gameState.currentPlayer];
+// Show win announcement
+showAnnouncement('Victory!', `${winnerName} wins with ${winnerScore} points!`);
+turnInfo.textContent = `Game Over! ${winnerName} wins!`;
+throwBtn.disabled = true;
+nextBtn.disabled = true;
+// Show celebration
+dartboard.style.boxShadow = '0 0 30px rgba(49,233,129,.5)';
+}
+// Initialize button states
+nextBtn.disabled = true;
+});
+</script>
+</body>
+</html>

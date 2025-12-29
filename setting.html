@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Arcadia — Settings</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&display=sw
+ap" rel="stylesheet">
+<style>
+:root {
+--bg:#080a12;
+--panel:#0f1326cc;
+--text:#e7ecff;
+--muted:#b7c0ff;
+--accent:#7c5cff;
+--accent-2:#00ffd1;
+--radius:22px;
+--shadow:0 10px 30px rgba(0,0,0,.35);
+}
+body {
+margin:0;
+font-family:"Chakra Petch", sans-serif;
+background: var(--bg);
+color: var(--text);
+display:flex;
+flex-direction:column;
+min-height:100vh;
+}
+/* Light theme override */
+body.light {
+--bg:#f5f6fa;
+--panel:#fff9;
+--text:#20222a;
+--muted:#555;
+--accent:#ff6a3d;
+--accent-2:#0099ff;
+}
+body::before {
+content:"";
+position:fixed;
+top:0; left:0; right:0; bottom:0;
+background: radial-gradient(circle at 20% 20%, #7c5cff55, transparent 60%),
+radial-gradient(circle at 80% 80%, #00ffd155, transparent 60%),
+radial-gradient(circle at 50% 50%, #ff3d7555, transparent 70%);
+animation: moveBg 20s infinite alternate ease-in-out;
+z-index:-1;
+}
+@keyframes moveBg {
+0% { background-position: 20% 20%, 80% 80%, 50% 50%; }
+50% { background-position: 30% 10%, 70% 90%, 40% 60%; }
+100% { background-position: 20% 30%, 80% 70%, 60% 40%; }
+}
+header {
+display:flex;
+justify-content:flex-start;
+align-items:center;
+padding:14px 22px;
+background: var(--panel);
+backdrop-filter: blur(10px);
+}
+.header-btn {
+background:none;
+border:none;
+color:var(--text);
+font-size:1.1rem;
+cursor:pointer;
+padding:8px 12px;
+border-radius:12px;
+transition:background .2s;
+}
+.header-btn:hover { background:var(--accent); color:#fff; }
+main {
+flex:1;
+padding:30px 20px;
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:30px;
+}
+h1 {
+font-size:2.6rem;
+margin-bottom:8px;
+background:linear-gradient(90deg, var(--accent), var(--accent-2));
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+.greeting {color:var(--muted); margin-bottom:20px;}
+.settings-card {
+background: var(--panel);
+border-radius: var(--radius);
+box-shadow: var(--shadow);
+padding:30px;
+width:100%;
+max-width:600px;
+}
+.settings-card h2 {
+margin-bottom:20px;
+font-size:1.8rem;
+color:var(--accent-2);
+}
+.setting {
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:12px 0;
+border-bottom:1px solid #ffffff22;
+}
+.setting:last-child {border-bottom:none;}
+.setting label {
+font-weight:600;
+color:var(--accent);
+}
+.setting span {
+color:var(--text);
+}
+footer {
+padding:12px 20px;
+text-align:center;
+color:var(--muted);
+}
+.controls {
+position:fixed;
+bottom:16px;
+left:16px;
+display:flex;
+gap:12px;
+}
+.control-btn {
+width:50px; height:50px;
+border-radius:50%;
+border:none;
+display:grid; place-items:center;
+cursor:pointer;
+font-size:1.3rem;
+color:#fff;
+background:linear-gradient(135deg, var(--accent), var(--accent-2));
+box-shadow:0 4px 12px rgba(0,0,0,.3);
+transition:transform .15s;
+}
+.control-btn:hover {transform:scale(1.1);}
+</style>
+</head>
+<body>
+<header>
+<button class="header-btn" onclick="window.location.href='home.html'"> </button>
+<button class="header-btn" onclick="window.location.href='profile.html'"> </button>
+</header>
+<main>
+<h1>Settings</h1>
+<p class="greeting">Your account information </p>
+<section class="settings-card">
+<h2>Account Info</h2>
+<div class="setting">
+<label>Username:</label>
+<span id="username">Player123</span>
+</div>
+<div class="setting">
+<label>Password:</label>
+<span>••••••••</span>
+</div>
+<div class="setting">
+<label>Email:</label>
+<span>player123@email.com</span>
+</div>
+<div class="setting">
+<label>Status:</label>
+<span id="status">Online</span>
+</div>
+<div class="setting">
+<label>Created At:</label>
+<span>2025-01-01 12:00</span>
+</div>
+</section>
+</main>
+<footer>© 2025 Arcadia Network</footer>
+<!-- Controls bottom left -->
+<div class="controls">
+<button class="control-btn" id="musicBtn"> </button>
+<button class="control-btn" id="themeBtn"> </button>
+</div>
+<!-- Background music -->
+<audio id="bgMusic" loop>
+<source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+type="audio/mpeg">
+</audio>
+<script>
+// Music controls
+const music = document.getElementById("bgMusic");
+const musicBtn = document.getElementById("musicBtn");
+let playing = false;
+musicBtn.addEventListener("click",()=>{
+if(playing){ music.pause(); playing=false; musicBtn.textContent=" "; }
+else { music.play(); playing=true; musicBtn.textContent="⏸"; }
+});
+// Theme toggle
+document.getElementById("themeBtn").addEventListener("click",()=>{
+document.body.classList.toggle("light");
+});
+</script>
+</body>
+</html>

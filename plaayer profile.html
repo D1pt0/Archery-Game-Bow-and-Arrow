@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title> Player Profile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&display=sw
+ap" rel="stylesheet">
+<style>
+:root {
+--bg:#080a12;
+--panel:#0f1326cc;
+--text:#e7ecff;
+--muted:#b7c0ff;
+--accent:#7c5cff;
+--accent-2:#00ffd1;
+--radius:22px;
+--shadow:0 10px 30px rgba(0,0,0,.35);
+}
+body {
+margin:0;
+font-family:"Chakra Petch", sans-serif;
+background: var(--bg);
+color: var(--text);
+display:flex;
+flex-direction:column;
+min-height:100vh;
+}
+body::before {
+content:"";
+position:fixed;
+top:0; left:0; right:0; bottom:0;
+background: radial-gradient(circle at 20% 20%, #7c5cff55, transparent 60%),
+radial-gradient(circle at 80% 80%, #00ffd155, transparent 60%),
+radial-gradient(circle at 50% 50%, #ff3d7555, transparent 70%);
+animation: moveBg 20s infinite alternate ease-in-out;
+z-index:-1;
+}
+@keyframes moveBg {
+0% { background-position: 20% 20%, 80% 80%, 50% 50%; }
+50% { background-position: 30% 10%, 70% 90%, 40% 60%; }
+100% { background-position: 20% 30%, 80% 70%, 60% 40%; }
+}
+header {
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:14px 22px;
+background: var(--panel);
+backdrop-filter: blur(10px);
+}
+.header-btn {
+background:none;
+border:none;
+color:var(--text);
+font-size:1.1rem;
+cursor:pointer;
+padding:8px 12px;
+border-radius:12px;
+transition:background .2s;
+}
+.header-btn:hover { background:var(--accent); color:#fff; }
+main {
+flex:1;
+padding:30px 20px;
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:30px;
+}
+h1 {
+font-size:2.6rem;
+margin-bottom:8px;
+background:linear-gradient(90deg, var(--accent), var(--accent-2));
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+.greeting {color:var(--muted); margin-bottom:20px;}
+.profile-card {
+background: var(--panel);
+border-radius: var(--radius);
+box-shadow: var(--shadow);
+padding:30px;
+width:100%;
+max-width:1000px;
+display:grid;
+grid-template-columns: 200px 1fr;
+gap:30px;
+align-items:center;
+}
+.avatar {
+width:180px; height:180px;
+border-radius:50%;
+border:4px solid var(--accent-2);
+object-fit:cover;
+}
+.info h2 {margin:0 0 10px; font-size:2rem; color:var(--accent-2);}
+.stats {display:flex; gap:20px; flex-wrap:wrap;}
+.stat {
+background:var(--bg);
+padding:14px 20px;
+border-radius:12px;
+text-align:center;
+flex:1;
+min-width:120px;
+}
+.stat h3 {margin:0; font-size:1.6rem; color:var(--accent);}
+.stat p {margin:0; font-size:0.9rem; color:var(--muted);}
+.cards {
+display:grid;
+grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+gap:30px;
+width:100%;
+max-width:1000px;
+}
+.card {
+background:var(--panel);
+border-radius: var(--radius);
+padding:20px;
+box-shadow: var(--shadow);
+}
+.card h2 {margin-bottom:12px; font-size:1.6rem; color:var(--accent);}
+.card ul {list-style:none; padding:0; margin:0;}
+.card li {padding:6px 0; color:var(--muted); border-bottom:1px solid #ffffff22;}
+.card li:last-child{border:none;}
+footer {
+padding:12px 20px;
+text-align:center;
+color:var(--muted);
+}
+.controls {
+position:fixed;
+bottom:16px;
+left:16px;
+display:flex;
+gap:12px;
+}
+.control-btn, .logout-btn {
+width:50px; height:50px;
+border-radius:50%;
+border:none;
+display:grid; place-items:center;
+cursor:pointer;
+font-size:1.3rem;
+color:#fff;
+box-shadow:0 4px 12px rgba(0,0,0,.3);
+transition:transform .15s;
+}
+.control-btn {background:linear-gradient(135deg, var(--accent), var(--accent-2));}
+.logout-btn {
+position:fixed;
+bottom:16px;
+right:16px;
+background:linear-gradient(135deg, #ff3d7d, #ff6a3d);
+}
+.control-btn:hover, .logout-btn:hover {transform:scale(1.1);}
+</style>
+</head>
+<body>
+<header>
+<button class="header-btn" onclick="window.location.href='home.html'"> 
+Home</button>
+</header>
+<main>
+<h1>Player Profile</h1>
+<p class="greeting">Here’s your journey, <span id="playerName">Player</span> </p>
+<!-- Profile section -->
+<section class="profile-card">
+<img src="https://i.pravatar.cc/300" alt="Player Avatar" class="avatar">
+<div class="info">
+<h2 id="playerDisplay">Player</h2>
+<div class="stats">
+<div class="stat"><h3>42</h3><p>Level</p></div>
+<div class="stat"><h3>1250</h3><p>XP</p></div>
+<div class="stat"><h3>320</h3><p>Wins</p></div>
+<div class="stat"><h3>58%</h3><p>Win Rate</p></div>
+</div>
+</div>
+</section>
+<!-- Achievements / Gear / Activity -->
+<section class="cards">
+<div class="card">
+<h2> Achievements</h2>
+<ul>
+<li>First Blood</li>
+<li>Sharpshooter</li>
+<li>Unstoppable</li>
+</ul>
+</div>
+<div class="card">
+<h2>🛡 Gear</h2>
+<ul>
+<li>Legendary Sword</li>
+<li>Dragon Shield</li>
+<li>Stealth Cloak</li>
+</ul>
+</div>
+<div class="card">
+<h2> Recent Activity</h2>
+<ul>
+<li>Completed Daily Challenge</li>
+<li>Ranked Match Victory</li>
+<li>New Friend Added</li>
+</ul>
+</div>
+</section>
+</main>
+<footer>© 2025 </footer>
+<!-- Controls bottom left -->
+<div class="controls">
+<button class="control-btn" id="musicBtn"> </button>
+</div>
+<!-- Logout bottom right -->
+<button class="logout-btn" title="Logout">⏻</button>
+<!-- Background music -->
+<audio id="bgMusic" loop>
+<source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"
+type="audio/mpeg">
+</audio>
+<script>
+// Player name from URL
+const params = new URLSearchParams(window.location.search);
+const player = params.get("player");
+if(player){
+document.getElementById("playerName").textContent = player;
+document.getElementById("playerDisplay").textContent = player;
+}
+// Music toggle
+const music = document.getElementById("bgMusic");
+const musicBtn = document.getElementById("musicBtn");
+let playing = false;
+musicBtn.addEventListener("click",()=>{
+if(playing){ music.pause(); playing=false; musicBtn.textContent=" "; }
+else { music.play(); playing=true; musicBtn.textContent="⏸"; }
+});
+// Theme toggle
+document.getElementById("themeBtn").addEventListener("click",()=>{
+document.body.classList.toggle("light");
+});
+// Logout button
+document.querySelector(".logout-btn").addEventListener("click",()=>{
+window.location.href = "login.html";
+});
+</script>
+</body>
+</html>

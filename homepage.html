@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title> Player Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&display=sw
+ap" rel="stylesheet">
+<style>
+:root {
+--bg:#080a12;
+--panel:#0f1326cc;
+--text:#e7ecff;
+--muted:#b7c0ff;
+--accent:#7c5cff;
+--accent-2:#00ffd1;
+--radius:22px;
+--shadow:0 10px 30px rgba(0,0,0,.35);
+}
+body {
+margin:0;
+font-family:"Chakra Petch", sans-serif;
+background: var(--bg);
+color: var(--text);
+display:flex;
+flex-direction:column;
+min-height:100vh;
+overflow:hidden;
+}
+body::before {
+content:"";
+position:fixed;
+top:0; left:0; right:0; bottom:0;
+background: radial-gradient(circle at 20% 20%, #7c5cff55, transparent 60%),
+radial-gradient(circle at 80% 80%, #00ffd155, transparent 60%),
+radial-gradient(circle at 50% 50%, #ff3d7555, transparent 70%);
+animation: moveBg 20s infinite alternate ease-in-out;
+z-index:-1;
+}
+@keyframes moveBg {
+0% { background-position: 20% 20%, 80% 80%, 50% 50%; }
+50% { background-position: 30% 10%, 70% 90%, 40% 60%; }
+100% { background-position: 20% 30%, 80% 70%, 60% 40%; }
+}
+body.light {
+--bg:#f5f6fa;
+--panel:#fff9;
+--text:#20222a;
+--muted:#555;
+--accent:#ff6a3d;
+--accent-2:#0099ff;
+}
+header {
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:14px 22px;
+background: var(--panel);
+backdrop-filter: blur(10px);
+}
+.left, .right {
+display:flex;
+gap:16px;
+align-items:center;
+}
+.header-btn {
+background: none;
+border:none;
+color: var(--text);
+font-size:1.1rem;
+cursor:pointer;
+padding:8px 12px;
+border-radius:12px;
+transition: background .2s;
+}
+.header-btn:hover {
+background: var(--accent);
+color:#fff;
+}
+main {
+flex:1;
+text-align:center;
+padding:30px 20px;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+}
+h1 {
+font-size:2.6rem;
+margin-bottom:16px;
+background:linear-gradient(90deg, var(--accent), var(--accent-2));
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+.greeting {color:var(--muted); margin-bottom:40px;}
+.cards {
+display:grid;
+grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+gap:30px;
+width:100%;
+max-width:1200px;
+}
+.card {
+background: var(--panel);
+border-radius: var(--radius);
+padding:60px 20px;
+box-shadow: var(--shadow);
+cursor:pointer;
+transition:transform .15s, background .2s;
+text-decoration:none;
+color:inherit;
+display:block;
+}
+.card:hover{
+transform:translateY(-8px) scale(1.02);
+background:linear-gradient(135deg, var(--accent)33, var(--panel));
+}
+.card h2 {
+font-size:2rem;
+margin-bottom:14px;
+color:var(--accent-2);
+}
+.card p {
+font-size:1.1rem;
+color:var(--muted);
+}
+footer {
+padding:12px 20px;
+text-align:center;
+color:var(--muted);
+}
+.controls {
+position:fixed;
+bottom:16px;
+left:16px;
+display:flex;
+gap:12px;
+z-index:5;
+}
+.control-btn {
+width:50px; height:50px;
+border-radius:50%;
+border:none;
+display:grid; place-items:center;
+cursor:pointer;
+font-size:1.3rem;
+background:linear-gradient(135deg, var(--accent), var(--accent-2));
+color:#fff;
+box-shadow:0 4px 12px rgba(0,0,0,.3);
+transition:transform .15s;
+}
+.control-btn:hover{transform:scale(1.1);}
+.logout-btn {
+position:fixed;
+bottom:16px;
+right:16px;
+width:50px; height:50px;
+border-radius:50%;
+border:none;
+display:grid; place-items:center;
+cursor:pointer;
+font-size:1.3rem;
+background:linear-gradient(135deg, #ff3d7d, #ff6a3d);
+color:#fff;
+box-shadow:0 4px 12px rgba(0,0,0,.3);
+transition:transform .15s;
+}
+.logout-btn:hover{transform:scale(1.1);}
+</style>
+</head>
+<body>
+<header>
+<div class="left">
+<!-- Profile button -->
+<button class="header-btn" onclick="location.href='profile.html'"> </button>
+</div>
+<div class="right">
+<button class="header-btn" title="Friends"
+onclick="location.href='friends.html'"> </button>
+<button class="header-btn" title="Chat" onclick="location.href='chat.html'"> </button>
+</div>
+</header>
+<main>
+<h1>Game Hub</h1>
+<p class="greeting">Welcome back, <span id="playerName">Player</span> </p>
+<section class="cards">
+<a class="card" href="matchmaking.html"><h2>▶ Play</h2><p>Jump straight into the 
+adventure.</p></a>
+<a class="card" href="profile.html"><h2> Profile</h2><p>Check your stats, gear & 
+milestones.</p></a>
+<a class="card" href="leaderboard.html"><h2> Leaderboard</h2><p>Climb the global 
+rankings.</p></a>
+<a class="card" href="daily-challenge.html"><h2> Daily Challenge</h2><p>Complete 
+daily missions for rewards.</p></a>
+<a class="card" href="friends.html"><h2> Friends</h2><p>Manage allies and co-op 
+parties.</p></a>
+<a class="card" href="settings.html"><h2>⚙ Settings</h2><p>Personalize your 
+experience.</p></a>
+</section>
+</main>
+<footer>© 2025 </footer>
+<div class="controls">
+<button class="control-btn" id="musicBtn"> </button>
+<button class="control-btn" id="themeBtn"> </button>
+</div>
+<button class="logout-btn" title="Logout">⏻</button>
+<audio id="bgMusic" loop>
+<source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"
+type="audio/mpeg">
+</audio>
+<script>
+const params = new URLSearchParams(window.location.search);
+const player = params.get("player");
+if(player){document.getElementById("playerName").textContent = player;}
+const music = document.getElementById("bgMusic");
+const musicBtn = document.getElementById("musicBtn");
+let playing = false;
+musicBtn.addEventListener("click",()=>{
+if(playing){ music.pause(); playing=false; musicBtn.textContent=" "; }
+else { music.play(); playing=true; musicBtn.textContent="⏸"; }
+});
+const themeBtn = document.getElementById("themeBtn");
+themeBtn.addEventListener("click",()=>{
+document.body.classList.toggle("light");
+});
+document.querySelector(".logout-btn").addEventListener("click",()=>{
+window.location.href = "login.html";
+});
+</script>
+</body>
+</html>

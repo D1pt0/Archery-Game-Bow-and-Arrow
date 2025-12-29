@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Create Player — Arcadia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=Jet
+Brains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+body {
+margin: 0;
+font-family: 'Chakra Petch', sans-serif;
+background: radial-gradient(circle at center, #080a12, #0a0e21);
+color: #fff;
+display: grid;
+place-items: center;
+height: 100vh;
+}
+.card {
+width: min(460px, 92vw);
+background: rgba(15,19,38,0.85);
+border: 2px solid #7c5cff;
+border-radius: 20px;
+padding: 28px;
+box-shadow: 0 10px 30px rgba(0,0,0,.35);
+backdrop-filter: blur(10px);
+}
+h1 {
+text-align: center;
+font-weight: 700;
+color: #7c5cff;
+}
+form {
+margin-top: 18px;
+display: grid;
+gap: 16px;
+}
+label {
+font-weight: 600;
+}
+input {
+width: 100%;
+padding: 14px;
+border-radius: 14px;
+border: 1.5px solid rgba(255,255,255,.1);
+background: rgba(10,14,33,.65);
+color: #fff;
+outline: none;
+font-family: 'JetBrains Mono', monospace;
+}
+input:focus {
+border-color: #7c5cff;
+box-shadow: 0 0 0 3px rgba(124,92,255,0.2);
+}
+button {
+appearance: none;
+border: none;
+cursor: pointer;
+padding: 14px 18px;
+border-radius: 14px;
+font-weight: 800;
+background: linear-gradient(90deg, #7c5cff, #00ffd1);
+color: #08131a;
+box-shadow: 0 8px 20px rgba(124,92,255,.35);
+}
+button:hover {
+filter: saturate(115%);
+}
+.link {
+display: block;
+text-align: center;
+margin-top: 12px;
+color: #00ffd1;
+text-decoration: none;
+}
+.link:hover {
+text-decoration: underline;
+}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>Create Player</h1>
+<form action="login.html" method="get">
+<label for="new-player">Player Tag</label>
+<input id="new-player" name="new-player" type="text" placeholder="e.g., PixelRanger"
+minlength="3" maxlength="24" required>
+<label for="new-key">Access Key</label>
+<input id="new-key" name="new-key" type="password" placeholder="Create a strong key"
+minlength="6" required>
+<label for="confirm-key">Confirm Key</label>
+<input id="confirm-key" name="confirm-key" type="password" placeholder="Repeat your 
+key" minlength="6" required>
+<button type="submit">Register Player</button>
+</form>
+<a class="link" href="login.html">Already have an account? Login here</a>
+</div>
+</body>
+</html>
